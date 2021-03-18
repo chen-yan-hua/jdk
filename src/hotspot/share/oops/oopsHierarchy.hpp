@@ -33,7 +33,8 @@
 // This hierarchy is a representation hierarchy, i.e. if A is a superclass
 // of B, A's representation is a prefix of B's representation.
 
-typedef juint narrowOop; // Offset instead of address for an oop within a java object
+// Global offset instead of address for an oop within a java object.
+enum class narrowOop : uint32_t { null = 0 };
 
 // If compressed klass pointers then use narrowKlass.
 typedef juint  narrowKlass;
@@ -120,7 +121,7 @@ struct PrimitiveConversions::Translate<oop> : public TrueType {
        type##Oop() : oop() {}                                              \
        type##Oop(const type##Oop& o) : oop(o) {}                           \
        type##Oop(const oop& o) : oop(o) {}                                 \
-       type##Oop(const void* p) : oop(p) {}                                \
+       type##Oop(type##OopDesc* o) : oop((oopDesc*)o) {}                   \
        operator type##OopDesc* () const { return (type##OopDesc*)obj(); }  \
        type##OopDesc* operator->() const {                                 \
             return (type##OopDesc*)obj();                                  \
